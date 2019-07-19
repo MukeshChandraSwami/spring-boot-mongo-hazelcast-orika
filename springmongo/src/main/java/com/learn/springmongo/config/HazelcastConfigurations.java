@@ -2,11 +2,13 @@ package com.learn.springmongo.config;
 
 import com.hazelcast.config.Config;
 import com.hazelcast.config.EvictionPolicy;
+import com.hazelcast.config.ManagementCenterConfig;
 import com.hazelcast.config.MapConfig;
 import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.spring.cache.HazelcastCacheManager;
 import com.learn.springmongo.constants.GenericConstants;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -14,6 +16,9 @@ import org.springframework.context.annotation.Profile;
 @Configuration
 @Profile("mongojava")
 public class HazelcastConfigurations {
+
+    @Value("{server.port}")
+    private String port;
 
     @Bean
     public Config hazelcastCacheConfig(){
@@ -39,6 +44,8 @@ public class HazelcastConfigurations {
         authorByIdListCache.setEvictionPolicy(EvictionPolicy.LRU);
         conf.getMapConfigs().put(GenericConstants.AUTHOR_BY_ID_LIST_CACHE,authorByIdListCache);
 
+        conf.setManagementCenterConfig(hazelcastManagementCenterConfig());
+
         return conf;
     }
 
@@ -52,5 +59,10 @@ public class HazelcastConfigurations {
         return new HazelcastCacheManager(createHazelcastInstance());
     }
 
-
+    @Bean
+    public ManagementCenterConfig hazelcastManagementCenterConfig(){
+        ManagementCenterConfig manCenterConfig = new ManagementCenterConfig();
+        manCenterConfig.setEnabled(true).setUrl("http://localhost:9090/mancenter");
+        return manCenterConfig;
+    }
 }
