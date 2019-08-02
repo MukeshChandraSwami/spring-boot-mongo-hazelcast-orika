@@ -43,7 +43,7 @@ public class AuthorService {
     }
 
     public Response addAuthor(AuthorEO author) {
-        AuthorResponse response = null;
+        AuthorResponse response = new AuthorResponse();
 
         authorRepo.save(author);
 

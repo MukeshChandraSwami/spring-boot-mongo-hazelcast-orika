@@ -8,7 +8,6 @@ import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.spring.cache.HazelcastCacheManager;
 import com.learn.springmongo.constants.GenericConstants;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -17,11 +16,8 @@ import org.springframework.context.annotation.Profile;
 @Profile("mongojava")
 public class HazelcastConfigurations {
 
-    @Value("{server.port}")
-    private String port;
-
     @Bean
-    public Config hazelcastCacheConfig(){
+    public Config hazelcastCacheConfig() {
 
         Config conf = new Config();
         conf.setInstanceName(GenericConstants.SPRING_BOOT_WITH_MONGODB_AND_HAZELCAST_CASE);
@@ -30,19 +26,19 @@ public class HazelcastConfigurations {
         MapConfig allAuthorConfig = new MapConfig(GenericConstants.AUTHOR_CACHE_ALL);
         allAuthorConfig.setTimeToLiveSeconds(3600);
         allAuthorConfig.setEvictionPolicy(EvictionPolicy.LRU);
-        conf.getMapConfigs().put(GenericConstants.AUTHOR_CACHE_ALL,allAuthorConfig);
+        conf.getMapConfigs().put(GenericConstants.AUTHOR_CACHE_ALL, allAuthorConfig);
 
         // Cache for getting author by ID
         MapConfig authorByIdCache = new MapConfig(GenericConstants.AUTHOR_BY_ID_CACHE);
         authorByIdCache.setTimeToLiveSeconds(3600);
         authorByIdCache.setEvictionPolicy(EvictionPolicy.LRU);
-        conf.getMapConfigs().put(GenericConstants.AUTHOR_BY_ID_CACHE,authorByIdCache);
+        conf.getMapConfigs().put(GenericConstants.AUTHOR_BY_ID_CACHE, authorByIdCache);
 
         // Cache for getting author by list of IDs
         MapConfig authorByIdListCache = new MapConfig(GenericConstants.AUTHOR_BY_ID_LIST_CACHE);
         authorByIdListCache.setTimeToLiveSeconds(3600);
         authorByIdListCache.setEvictionPolicy(EvictionPolicy.LRU);
-        conf.getMapConfigs().put(GenericConstants.AUTHOR_BY_ID_LIST_CACHE,authorByIdListCache);
+        conf.getMapConfigs().put(GenericConstants.AUTHOR_BY_ID_LIST_CACHE, authorByIdListCache);
 
         conf.setManagementCenterConfig(hazelcastManagementCenterConfig());
 
@@ -50,17 +46,17 @@ public class HazelcastConfigurations {
     }
 
     @Bean
-    public HazelcastInstance createHazelcastInstance(){
+    public HazelcastInstance createHazelcastInstance() {
         return Hazelcast.newHazelcastInstance(hazelcastCacheConfig());
     }
 
-    @Bean (name = "hazelcast-cache-manager")
-    public HazelcastCacheManager cacheManager(){
+    @Bean(name = "hazelcast-cache-manager")
+    public HazelcastCacheManager cacheManager() {
         return new HazelcastCacheManager(createHazelcastInstance());
     }
 
     @Bean
-    public ManagementCenterConfig hazelcastManagementCenterConfig(){
+    public ManagementCenterConfig hazelcastManagementCenterConfig() {
         ManagementCenterConfig manCenterConfig = new ManagementCenterConfig();
         manCenterConfig.setEnabled(true).setUrl("http://localhost:9090/mancenter");
         return manCenterConfig;

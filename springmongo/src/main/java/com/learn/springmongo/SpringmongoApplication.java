@@ -8,8 +8,8 @@ import org.springframework.cache.annotation.EnableCaching;
 @EnableCaching
 public class SpringmongoApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(SpringmongoApplication.class, args);
-	}
+    public static void main(String[] args) {
 
+        SpringApplication.run(SpringmongoApplication.class, args);
+    }
 }
